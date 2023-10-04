@@ -9,7 +9,6 @@ startTime = time.time()
 
 # Print timestamp
 print(f"--- *** {datetime.now()} *** ---")
-print("\n")
 
 
 ########################################################################################################################
@@ -22,9 +21,12 @@ seasons_response = requests.get(seasons_url).json()
 # Create a dictionary with season years as keys and their IDs as values
 seasons_dict = {str(season["year"]): season["id"] for season in seasons_response}
 
-# Filter seasons that contain "202"
-filtered_dict = {key: value for key, value in seasons_dict.items() if "202" in key}
+print("")
+print("")
+print("Seasons collected")
 
+
+########################################################################################################################
 # Find the MotoGP category ID
 motogp_id = None
 # Define the API endpoint for categories
@@ -38,13 +40,19 @@ for category in categories_response:
         motogp_id = category["id"]
         break
 
+print("")
+print("")
+print("MotoGP category collected")
+
+
+########################################################################################################################
 # Initialize empty lists for event data, race data, and championship rank data
 all_events_data = []
 all_races_data = []
 championship_ranks_data = []
 
 # Iterate through each season and fetch event data
-for season_year, season_id in filtered_dict.items():
+for season_year, season_id in seasons_dict.items():
     # Define the API endpoint for events of a specific season
     events_url = f"https://api.motogp.pulselive.com/motogp/v1/results/events?seasonUuid={season_id}&isFinished=true"
     # Request data from the API
@@ -60,6 +68,7 @@ for season_year, season_id in filtered_dict.items():
                 "event_id": event["id"],
                 "country": event.get("country", {}).get("name"),
                 "circuit_name": event.get("circuit", {}).get("name"),
+                "toad_api_uuid": event.get("toad_api_uuid"),
             }
         )
 
@@ -72,9 +81,58 @@ events_df = pd.DataFrame(all_events_data)
 # Filter and drop rows where "TEST" is in the "event_name" column
 events_df = events_df[~events_df["event_name"].str.contains("TEST")]
 
-# Reset the index
+events_df = events_df.drop_duplicates()
 events_df.reset_index(drop=True, inplace=True)
 
+print("")
+print("")
+print("Seasons events collected")
+
+
+########################################################################################################################
+# Create empty lists to store latitude and longitude data
+circuit_lat_list = []
+circuit_long_list = []
+
+# Iterate through events in events_df
+for event_uuid in events_df["toad_api_uuid"]:
+    # Define the API endpoint for the coordinates of a specific event
+    coordinates_request = (
+        f"https://api.motogp.pulselive.com/motogp/v1/events/{event_uuid}"
+    )
+
+    # Send a request to the API
+    coordinates_response = requests.get(coordinates_request).json()
+
+    # Extract latitude and longitude from the response
+    circuit_lat = coordinates_response.get("circuit", {}).get("lat")
+    circuit_long = coordinates_response.get("circuit", {}).get("lng")
+
+    # Append the data to the respective lists
+    circuit_lat_list.append(circuit_lat)
+    circuit_long_list.append(circuit_long)
+
+# Create the circuit_coord_df DataFrame with 'toad_api_uuid', 'circuit_lat', and 'circuit_long' columns
+circuit_coord_df = pd.DataFrame(
+    {
+        "toad_api_uuid": events_df["toad_api_uuid"],
+        "circuit_lat": circuit_lat_list,
+        "circuit_lng": circuit_long_list,
+    }
+)
+
+print("")
+print("")
+print("Circuit coordinates collected")
+
+# Merge event_df and circuit_coord_df on 'toad_api_uuid'
+events_df = events_df.merge(circuit_coord_df, on="toad_api_uuid", how="left")
+
+events_df = events_df.drop_duplicates()
+events_df.reset_index(drop=True, inplace=True)
+
+
+########################################################################################################################
 # Iterate through each event and fetch race data
 for event_id in events_df["event_id"]:
     # Define the API endpoint for race sessions of a specific event
@@ -110,6 +168,12 @@ races_df = races_df.rename(columns={"circuit_name_x": "circuit_name"})
 races_df = races_df.drop_duplicates()
 races_df.reset_index(drop=True, inplace=True)
 
+print("")
+print("")
+print("Races collected")
+
+
+########################################################################################################################
 # Define the base URL for fetching championship ranks
 base_url = "https://api.motogp.pulselive.com/motogp/v1/results/session"
 
@@ -150,6 +214,12 @@ for race_id in races_df["race_id"]:
                     "circuit_name": races_df.loc[
                         races_df["race_id"] == race_id, "circuit_name"
                     ].values[0],
+                    "circuit_lat": races_df.loc[
+                        races_df["race_id"] == race_id, "circuit_lat"
+                    ].values[0],
+                    "circuit_lng": races_df.loc[
+                        races_df["race_id"] == race_id, "circuit_lng"
+                    ].values[0],
                     "race_id": race_id,
                     "rider_name": rider_info.get("full_name", ""),
                     "rider_country": country_info.get("name", ""),
@@ -168,13 +238,18 @@ for race_id in races_df["race_id"]:
         # Handle other exceptions
         print(f"An error occurred: {e}")
 
+print("")
+print("")
+print("Races results collected")
+
+
 # Create the championship_ranks_df DataFrame, drop duplicates, and reset the index
 championship_ranks_df = pd.DataFrame(championship_ranks_data)
 championship_ranks_df = championship_ranks_df.drop_duplicates()
 championship_ranks_df.reset_index(drop=True, inplace=True)
 
 # Export data to CSV
-championship_ranks_df.to_csv("motogp_datas.csv", index=False)
+championship_ranks_df.to_csv("collect_motogp_datas.csv", index=False)
 
 
 ########################################################################################################################
