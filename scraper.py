@@ -248,6 +248,9 @@ championship_ranks_df = pd.DataFrame(championship_ranks_data)
 championship_ranks_df = championship_ranks_df.drop_duplicates()
 championship_ranks_df.reset_index(drop=True, inplace=True)
 
+# Create the "coordinates" column
+championship_ranks_df['coordinates'] = championship_ranks_df['circuit_lat'].astype(str) + ',' + championship_ranks_df['circuit_lng'].astype(str)
+
 # Export data to CSV
 championship_ranks_df.to_csv("collect_motogp_datas.csv", index=False)
 
