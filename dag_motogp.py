@@ -3,36 +3,25 @@ from datetime import datetime
 from datetime import timedelta
 from airflow.operators.bash import BashOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
-from airflow.providers.ssh.hooks.ssh import SSHHook
 
 import pendulum
 
 local_tz = pendulum.timezone("Europe/Paris")
 
 default_args = {
-    "owner": "data",
+    "owner": "Alex LASNIER,
     "depends_on_past": False,
-    "email": ["datalab@coyote-group.com"],
+    "email": ["alex.lasnier30@gmail.com"],
     "email_on_failure": True,
     "email_on_retry": False,
 }
 
-sshHook = SSHHook(ssh_conn_id="zvp-ldtl001")
-
-
 with DAG(
-    "sync_customers",
-    start_date=datetime(2021, 11, 18, tzinfo=local_tz),
-    schedule_interval="30 6 * * *",
+    "motogp_project",
+    start_date=datetime(2023, 12, 01, tzinfo=local_tz),
+    schedule_interval="30 8 * * 1",
     tags=[
-        "Fcd",
-        "Elasticsearch",
-        "Customers",
-        "Daily",
-        "Report",
-        "PowerBI",
-        "Belgium",
-        "P&S",
+        "motoGP",
     ],
 ) as dag:
     task1 = BashOperator(
