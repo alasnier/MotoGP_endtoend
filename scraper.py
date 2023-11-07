@@ -20,6 +20,9 @@ seasons_url = "https://api.motogp.pulselive.com/motogp/v1/results/seasons"
 seasons_response = requests.get(seasons_url).json()
 # Create a dictionary with season years as keys and their IDs as values
 seasons_dict = {str(season["year"]): season["id"] for season in seasons_response}
+# filtered_data = {
+#     int(key): value for key, value in seasons_dict.items() if 2018 <= int(key) <= 2023
+# }
 
 print("")
 print("")
@@ -69,6 +72,7 @@ for season_year, season_id in seasons_dict.items():
                 "country": event.get("country", {}).get("name"),
                 "circuit_name": event.get("circuit", {}).get("name"),
                 "toad_api_uuid": event.get("toad_api_uuid"),
+                "event_date": event.get("date_end"),
             }
         )
 
@@ -170,7 +174,7 @@ races_df.reset_index(drop=True, inplace=True)
 
 print("")
 print("")
-print("Races collected")
+print("Events / Races collected")
 
 
 ########################################################################################################################
@@ -226,6 +230,9 @@ for race_id in races_df["race_id"]:
                     "team_name": team_info.get("name", ""),
                     "constructor_name": constructor_info.get("name", ""),
                     "position": rank.get("position", ""),
+                    "date": races_df.loc[
+                        races_df["race_id"] == race_id, "event_date"
+                    ].values[0],
                 }
             )
     except requests.exceptions.HTTPError as e:
@@ -249,10 +256,14 @@ championship_ranks_df = championship_ranks_df.drop_duplicates()
 championship_ranks_df.reset_index(drop=True, inplace=True)
 
 # Create the "coordinates" column
-championship_ranks_df['coordinates'] = championship_ranks_df['circuit_lat'].astype(str) + ',' + championship_ranks_df['circuit_lng'].astype(str)
+championship_ranks_df["coordinates"] = (
+    championship_ranks_df["circuit_lat"].astype(str)
+    + ","
+    + championship_ranks_df["circuit_lng"].astype(str)
+)
 
 # Export data to CSV
-championship_ranks_df.to_csv("collect_motogp_datas.csv", index=False)
+championship_ranks_df.to_parquet("collect_motogp_datas.parquet", index=False)
 
 
 ########################################################################################################################
@@ -262,6 +273,66 @@ endTime = time.time()
 executionTime = endTime - startTime
 print("")
 print("")
+print("Collect of Data finished")
+print(
+    f"--- *** Total execution time in seconds: {executionTime}, in minutes: {executionTime/60} and in hours: {executionTime/60/60} *** ---"
+)
+print("")
+print("")
+
+
+########################################################################################################################
+# Upload to BigQuery 2
+########################################################################################################################
+# Set up credentials (service account key file)
+# client = bigquery.Client.from_service_account_json("service-account-key.json")
+
+from google.cloud import bigquery
+
+# Initialize the BigQuery client
+client = bigquery.Client()
+
+# Define the reference to your table
+table_ref = client.dataset("motogp_dataset").table("motogp_championships")
+
+# Check if the table exists
+try:
+    table = client.get_table(table_ref)
+    table_exists = True
+except Exception as e:
+    table_exists = False
+
+# Delete the existing table if it exists
+if table_exists:
+    client.delete_table(table_ref)
+
+# Define the job configuration
+job_config = bigquery.LoadJobConfig()
+job_config.source_format = bigquery.SourceFormat.PARQUET
+job_config.autodetect = True  # Enable schema auto-detection
+
+# Load data from the Parquet file
+with open("collect_motogp_datas.parquet", "rb") as source_file:
+    if table_exists:
+        # If the table exists, replace it with the data from the Parquet file
+        job = client.load_table_from_file(source_file, table_ref, job_config=job_config)
+    else:
+        # If the table doesn't exist, create a new table with automatic schema detection
+        job_config.autodetect = True
+        job = client.load_table_from_file(source_file, table_ref, job_config=job_config)
+
+    job.result()  # Wait for the job to complete
+
+
+########################################################################################################################
+# TIMER
+########################################################################################################################
+startTime = endTime
+endTime = time.time()
+executionTime = endTime - startTime
+print("")
+print("")
+print("Upload into BigQuery finished")
 print(
     f"--- *** Total execution time in seconds: {executionTime}, in minutes: {executionTime/60} and in hours: {executionTime/60/60} *** ---"
 )
