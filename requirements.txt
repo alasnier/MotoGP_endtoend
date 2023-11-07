@@ -1,15 +1,4 @@
-boto3
-botocore
-certifi
-charset-normalizer
-idna
-jmespath
-numpy
 pandas
-python-dateutil
-pytz
 requests
-s3transfer
-six
-tzdata
-urllib3
+google-cloud-bigquery
+pyarrow
