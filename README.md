@@ -26,8 +26,11 @@ Scrape MotoGP website, process and store datas collected, create a dashboard and
 - Create Dockerfile
 - Create Apache Airflow DAGs (1 to run localy ; 1 to run dockerized)
 - Create LookerStudio dashboard : https://lookerstudio.google.com/s/unJ9m98Qefg
-
 <img src="./icons/MotoGP_project.png" alt="request_logo">
+
+
+
+
 
 # 🚀 Highlights:
 
