@@ -1,11 +1,11 @@
 # MotoGP End-to-End : From Scraping to Dashboard
 
-Bienvenue dans mon projet personnel **MotoGP End-to-End : From Scraping to Dashboard** ! Ce projet fait partie de mon portfolio en tant que data engineer, et il couvre toutes les étapes d'un workflow de données complet, de l'extraction des données jusqu'à leur visualisation.
+Bienvenue dans mon projet personnel **MotoGP End-to-End : From Scraping to Dashboard** ! Ce projet couvre toutes les étapes d'un workflow de données complet, de l'extraction des données jusqu'à leur visualisation.
 
 ## 🏍️ Objectif
 
 L'objectif de ce projet est de :
-1. Récupérer des données statistiques MotoGP mises à jour chaque semaine.
+1. Récupérer des données statistiques MotoGP mises à jour à chaque evenement, depuis le site officiel.
 2. Traiter, stocker et visualiser ces données dans un tableau de bord actualisé tous les lundis.
 
 ## 🛠️ Stack Technique
@@ -17,6 +17,8 @@ L'objectif de ce projet est de :
   - **Visualisation** : Looker Studio
 
 ## 📋 Étapes du Projet
+
+<img src="./icons/MotoGP_project.png" alt="request_logo">
 
 1. **Extraction des données** :
    - Scraping des saisons et de leurs IDs
@@ -35,8 +37,8 @@ L'objectif de ce projet est de :
      - Un DAG Dockerisé
 
 4. **Tableau de bord** :
-   - Création d’un dashboard avec Looker Studio pour visualiser les résultats (lien : [Looker Studio Dashboard](https://lookerstudio.google.com/s/unJ9m98Qefg) - Mis hors ligne pour des raisons de coûts d’hébergement)
-
+   - Création d’un dashboard avec Looker Studio pour visualiser les résultats (lien : [Looker Studio Dashboard](https://lookerstudio.google.com/s/unJ9m98Qefg) - temporairement hors ligne pour des raisons de coûts d’hébergement)
+   
 ---
 
 Ce projet met en pratique mes compétences en **Data Engineering**, en intégrant des workflows de données modernes et des technologies de pointe. 
@@ -44,3 +46,9 @@ Ce projet met en pratique mes compétences en **Data Engineering**, en intégran
 ## 🔄 Mises à Jour
 
 Le projet est actualisé chaque lundi pour intégrer les nouvelles statistiques de MotoGP.
+
+---
+
+[MotoGP Dashboard Preview - fullpage](./icons/MotoGP_Basics_Stats_dashboard.pdf)
+
+![MotoGP Dashboard Preview - embedded](./icons/MotoGP_Basics_Stats_dashboard-1.png)
