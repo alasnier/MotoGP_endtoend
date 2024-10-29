@@ -1,48 +1,46 @@
-# Introduction
+# MotoGP End-to-End : From Scraping to Dashboard
 
-Data engineering is a crucial aspect of any data-driven organisation. It involves the collection, transformation and storage of data to enable effective data analysis and the facilitation of decision-making.
+Bienvenue dans mon projet personnel **MotoGP End-to-End : From Scraping to Dashboard** ! Ce projet fait partie de mon portfolio en tant que data engineer indépendant, et il couvre toutes les étapes d'un workflow de données complet, de l'extraction des données jusqu'à leur visualisation.
 
-This project provides a framework to observe various data engineering tasks such as scraping, storing, containerizing and visualizing basic statistics with various python methods.
+## 🏍️ Objectif
 
-# **🚀 Latest project done :**
+L'objectif de ce projet est de :
+1. Récupérer des données de statistiques MotoGP mises à jour chaque semaine.
+2. Traiter, stocker et visualiser ces données dans un tableau de bord actualisé tous les lundis.
 
-MotoGP basic stats (update every Monday)
+## 🛠️ Stack Technique
 
-# 🚀 Goal of this project :
-Scrape MotoGP website, process and store datas collected, create a dashboard and schedule it every week
+- **Langage** : Python (Pandas)
+- **Outils** :
+  - **Scraping** : `requests` library
+  - **Pipeline de données** : Docker, Apache Airflow, Google BigQuery
+  - **Visualisation** : Looker Studio
 
-🔹 Language : Python <img src="./icons/python.svg" alt="request_logo" width="50" height="50"> with Pandas <img src="./icons/pandas.svg" alt="request_logo" width="50" height="50">
+## 📋 Étapes du Projet
 
-🔹 Tools : requests library <img src="https://requests.readthedocs.io/en/latest/_static/requests-sidebar.png" alt="request_logo" width="50" height="50"> , Docker <img src="./icons/docker.svg" alt="request_logo" width="50" height="50"> , Google BigQuery <img src="./icons/googlebigquery.svg" alt="request_logo" width="50" height="50"> , LookerStudio <img src="./icons/looker.svg" alt="request_logo" width="50" height="50"> and Apache Airflow <img src="./icons/apacheairflow.svg" alt="request_logo" width="50" height="50">
+1. **Extraction des données** :
+   - Scraping des saisons et de leurs IDs
+   - Scraping des catégories de MotoGP et de leurs IDs
+   - Scraping des événements (nom, ID, circuit, pays, date)
+   - Scraping des coordonnées des circuits
+   - Scraping des résultats des courses
 
-# 🚀 Project Steps :
+2. **Stockage** :
+   - Chargement des données dans **Google BigQuery**
 
-- Scrape seasons and their IDs
-- Scrape MotoGP category ID
-- Scrape Events datas (name, ID , circuit and country, date)
-- Scrape Circuits coordinates
-- Scrape Races results
-- Upload into Google BigQuery
-- Create Dockerfile
-- Create Apache Airflow DAGs (1 to run localy ; 1 to run dockerized)
-- Create LookerStudio dashboard : https://lookerstudio.google.com/s/unJ9m98Qefg
-<img src="./icons/MotoGP_project.png" alt="request_logo">
+3. **Automatisation** :
+   - Création de fichiers `Dockerfile`
+   - Développement de DAGs dans **Apache Airflow** pour :
+     - Un DAG local
+     - Un DAG Dockerisé
 
-
-
-
-
-# 🚀 Highlights:
-
-End-to-End project with basic dashboard and most common data tools
-
-[MotoGP Dashboard Preview - fullpage](./icons/MotoGP_Basics_Stats_dashboard.pdf)
-
-![MotoGP Dashboard Preview - embedded](./icons/MotoGP_Basics_Stats_dashboard-1.png)
-
+4. **Tableau de bord** :
+   - Création d’un dashboard avec Looker Studio pour visualiser les résultats (lien : [Looker Studio Dashboard](https://lookerstudio.google.com/s/unJ9m98Qefg) - Mis hors ligne pour des raisons de coûts d’hébergement)
 
 ---
----
----
 
-Enjoy exploring the world of data engineering with this project! If you have any questions, feedback, or issues, please don't hesitate to contact me. Happy coding!
+Ce projet met en pratique mes compétences en **Data Engineering**, en intégrant des workflows de données modernes et des technologies de pointe. 
+
+## 🔄 Mises à Jour
+
+Le projet est actualisé chaque lundi pour intégrer les nouvelles statistiques de MotoGP.
