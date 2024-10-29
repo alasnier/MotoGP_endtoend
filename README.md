@@ -1,6 +1,6 @@
 # MotoGP End-to-End : From Scraping to Dashboard
 
-Bienvenue dans mon projet personnel **MotoGP End-to-End : From Scraping to Dashboard** ! Ce projet fait partie de mon portfolio en tant que data engineer indépendant, et il couvre toutes les étapes d'un workflow de données complet, de l'extraction des données jusqu'à leur visualisation.
+Bienvenue dans mon projet personnel **MotoGP End-to-End : From Scraping to Dashboard** ! Ce projet fait partie de mon portfolio en tant que data engineer, et il couvre toutes les étapes d'un workflow de données complet, de l'extraction des données jusqu'à leur visualisation.
 
 ## 🏍️ Objectif
 
