@@ -5,7 +5,7 @@ Bienvenue dans mon projet personnel **MotoGP End-to-End : From Scraping to Dashb
 ## 🏍️ Objectif
 
 L'objectif de ce projet est de :
-1. Récupérer des données de statistiques MotoGP mises à jour chaque semaine.
+1. Récupérer des données statistiques MotoGP mises à jour chaque semaine.
 2. Traiter, stocker et visualiser ces données dans un tableau de bord actualisé tous les lundis.
 
 ## 🛠️ Stack Technique
